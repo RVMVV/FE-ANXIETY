@@ -10,11 +10,15 @@ class ResultCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.emotion,
+    required this.score,
+    required this.material,
   });
   final String icon;
   final String title;
   final String emotion;
   final double screenWidth;
+  final String score;
+  final String material;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +76,7 @@ class ResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            'Skor $title 99',
+            'Skor $title $score',
             style: Styles.urbanistBold.copyWith(color: textColor, fontSize: 18),
           ),
           const SizedBox(height: 50),

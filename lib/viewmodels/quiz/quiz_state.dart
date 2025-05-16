@@ -23,11 +23,22 @@ final class SendQuizSuccess extends QuizState {
   final Map<String, List<dynamic>> dataQuiz;
 
   SendQuizSuccess(this.dataQuiz);
-  
 }
 
 final class SendQuizError extends QuizState {
   final String message;
 
   SendQuizError(this.message);
+}
+
+final class QuizHistorySuccess extends QuizState {
+  final QuizHistory quizHistory;
+
+  QuizHistorySuccess(this.quizHistory);
+}
+
+final class QuizHistoryError extends QuizState {
+  final String message;
+
+  QuizHistoryError(this.message);
 }

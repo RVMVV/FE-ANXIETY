@@ -2,15 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:screening_app/views/quiz.dart';
-
+import 'package:intl/intl.dart';
 import '../utils/constant_finals.dart';
 import '../viewmodels/auth/auth_cubit.dart';
+import '../viewmodels/quiz/quiz_cubit.dart';
 import 'edit_profile.dart';
 
+import 'result.dart';
+import 'widgets/history_card.dart';
 import 'widgets/warning_card.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<QuizCubit>().getQuizHistory();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +40,8 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: BlocBuilder<AuthCubit, AuthState>(
             bloc: context.read<AuthCubit>()..getUser(),
-            builder: (context, state) {
-              if (state is AuthLoading) {
+            builder: (context, authState) {
+              if (authState is AuthLoading) {
                 return SizedBox(
                   width: screenWidth,
                   height: screenHeight,
@@ -34,16 +50,16 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               }
-              if (state is GetUserSuccess) {
+              if (authState is GetUserSuccess) {
                 final isProfileIncomplete =
-                    state.user.profile.height == null &&
-                    state.user.profile.weight == null;
+                    authState.user.profile.height == null &&
+                    authState.user.profile.weight == null;
                 return Column(
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Halo, ${state.user.username}',
+                        'Halo, ${authState.user.username}',
                         style: Styles.urbanistBold.copyWith(
                           color: textColor,
                           fontSize: 26,
@@ -119,7 +135,6 @@ class HomePage extends StatelessWidget {
                                       ),
                                     );
                                   },
-
                                   child: Container(
                                     width: 50,
                                     height: 50,
@@ -169,13 +184,67 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    //history card
-                    // HistoryCard(month: 'JAN', day: '99'),
-                    // SizedBox(height: 16),
-                    // HistoryCard(month: 'FEB', day: '99'),
-                    // SizedBox(height:  16),
-                    // HistoryCard(month: 'MAR', day: '99'),
-                    // SizedBox(height: 16),
+                    BlocBuilder<QuizCubit, QuizState>(
+                      builder: (context, quizState) {
+                        if (quizState is QuizHistorySuccess) {
+                          final history = quizState.quizHistory;
+                          if (history.results.isEmpty) {
+                            return Text(
+                              'Belum ada riwayat screening',
+                              style: Styles.urbanistSemiBold.copyWith(
+                                color: textColor,
+                                fontSize: 18,
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HasilPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: HistoryCard(
+                                    month:
+                                        DateFormat('MMM')
+                                            .format(
+                                              DateTime.parse(history.createdAt),
+                                            )
+                                            .toUpperCase(),
+                                    day: DateFormat(
+                                      'dd',
+                                    ).format(DateTime.parse(history.createdAt)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        } else if (quizState is QuizHistoryError) {
+                          return Text(
+                            quizState.message,
+                            style: Styles.urbanistSemiBold.copyWith(
+                              fontSize: 16,
+                              color: textColor,
+                            ),
+                          );
+                        } else if (quizState is QuizInitial) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          );
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(color: primaryColor),
+                        );
+                      },
+                    ),
                   ],
                 );
               }

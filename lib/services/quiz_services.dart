@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/quiz/quiz_history.dart';
 import '../models/quiz/quiz_response.dart';
 import '../utils/constant_finals.dart';
 
@@ -33,15 +34,33 @@ class QuizServices {
           'values': element.value,
         }),
       );
-      final response = await http.post(
+      await http.post(
         Uri.parse('$apiUrl/$quizEndpoint/store'),
         headers:
             _headers..addAll({'Authorization': 'Bearer ${await getToken()}'}),
         body: jsonEncode(quizData),
       );
-      print(quizData);
-    } catch (e) {
+    } catch (e, s) {
+      print('Quiz Services - Send Quiz Data: $e');
+      print('Quiz Services - Send Quiz Data: $s');
       throw Exception(e);
+    }
+  }
+
+  Future<QuizHistory> getQuizHistory() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$apiUrl/$quizEndpoint/history'),
+        headers:
+            _headers..addAll({'Authorization': 'Bearer ${await getToken()}'}),
+      );
+      final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+      final historyResponse = QuizHistoryResponse.fromJson(jsonData);
+      return historyResponse.data[0];
+    } catch (e, s) {
+      print('Quiz Services - Get Quiz History: $e');
+      print('Quiz Services - Get Quiz History: $s');
+      throw Exception('Error fetching quiz history: $e');
     }
   }
 
