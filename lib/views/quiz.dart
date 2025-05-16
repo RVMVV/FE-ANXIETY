@@ -35,9 +35,11 @@ class _QuizPageState extends State<QuizPage> {
         _currentQuizType = 'DQoL';
       } else if (_currentQuizType == 'DQoL') {
         // Setelah DQoL selesai
-        _sliderValues.forEach((key, value) {
-          print('Pertanyaan ID: $key, Nilai Slider: $value');
-        });
+        // _sliderValues.forEach((key, value) {
+        //   print('Pertanyaan ID: $key, Nilai Slider: $value');
+        // });
+        print(_sliderValues);
+        context.read<QuizCubit>().sendQuizData(_sliderValues);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HasilPage()),

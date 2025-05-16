@@ -18,3 +18,16 @@ final class QuizError extends QuizState {
 
   QuizError(this.message);
 }
+
+final class SendQuizSuccess extends QuizState {
+  final Map<String, List<dynamic>> dataQuiz;
+
+  SendQuizSuccess(this.dataQuiz);
+  
+}
+
+final class SendQuizError extends QuizState {
+  final String message;
+
+  SendQuizError(this.message);
+}

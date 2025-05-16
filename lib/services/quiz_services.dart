@@ -24,6 +24,27 @@ class QuizServices {
     }
   }
 
+  Future<void> sendQuizData(Map<String, List<dynamic>> data) async {
+    try {
+      final quizData = <Map<String, dynamic>>[];
+      data.entries.forEach(
+        (element) => quizData.add({
+          'quiz_type_id': element.key,
+          'values': element.value,
+        }),
+      );
+      final response = await http.post(
+        Uri.parse('$apiUrl/$quizEndpoint/store'),
+        headers:
+            _headers..addAll({'Authorization': 'Bearer ${await getToken()}'}),
+        body: jsonEncode(quizData),
+      );
+      print(quizData);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);

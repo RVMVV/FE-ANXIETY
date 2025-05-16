@@ -19,4 +19,16 @@ class QuizCubit extends Cubit<QuizState> {
       emit(QuizError('Gagal Memuat Quiz : $e'));
     }
   }
+
+  Future<void> sendQuizData(Map<String, List<dynamic>> data) async {
+    emit(QuizLoading());
+    try {
+      await quizRepository.sendQuizData(data);
+      emit(SendQuizSuccess(data));
+    } catch (e, s) {
+      print('Quiz Cubit : $e');
+      print('Quiz Cubit : $s');
+      emit(SendQuizError('Gagal Mengirim Quiz : $e'));
+    }
+  }
 }

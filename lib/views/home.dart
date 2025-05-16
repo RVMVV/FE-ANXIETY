@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:screening_app/views/quiz_another.dart';
+import 'package:screening_app/views/quiz.dart';
 
 import '../utils/constant_finals.dart';
 import '../viewmodels/auth/auth_cubit.dart';
