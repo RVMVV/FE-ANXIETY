@@ -27,8 +27,6 @@ class QuizCubit extends Cubit<QuizState> {
       await quizRepository.sendQuizData(data);
       emit(SendQuizSuccess(data));
     } catch (e, s) {
-      print('Quiz Cubit - Send Quiz Data: $e');
-      print('Quiz Cubit - Send Quiz Data: $s');
       emit(SendQuizError('Gagal Mengirim Quiz : $e'));
     }
   }
@@ -39,8 +37,6 @@ class QuizCubit extends Cubit<QuizState> {
       final quizHistory = await quizRepository.getQuizHistory();
       emit(QuizHistorySuccess(quizHistory));
     } catch (e, s) {
-      print('Quiz Cubit - Get Quiz History: $e');
-      print('Quiz Cubit - Get Quiz History: $s');
       emit(QuizHistoryError('Gagal Memuat Riwayat Quiz: $e'));
     }
   }

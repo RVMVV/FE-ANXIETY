@@ -45,7 +45,6 @@ class _HasilPageState extends State<HasilPage> {
       ),
       body: BlocBuilder<QuizCubit, QuizState>(
         builder: (context, state) {
-          print(state);
           if (state is QuizLoading) {
             return Container(
               width: double.infinity,

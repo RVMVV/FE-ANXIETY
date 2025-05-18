@@ -89,7 +89,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        print(state);
         if (state is UpdateUserSuccess) {
           Navigator.pop(context);
           context.read<AuthCubit>().getUser();

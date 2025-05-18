@@ -40,9 +40,7 @@ class QuizServices {
             _headers..addAll({'Authorization': 'Bearer ${await getToken()}'}),
         body: jsonEncode(quizData),
       );
-    } catch (e, s) {
-      print('Quiz Services - Send Quiz Data: $e');
-      print('Quiz Services - Send Quiz Data: $s');
+    } catch (e) {
       throw Exception(e);
     }
   }
@@ -57,8 +55,7 @@ class QuizServices {
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
       final historyResponse = QuizHistoryResponse.fromJson(jsonData);
       return historyResponse.data;
-    } catch (e, s) {
-
+    } catch (e) {
       throw Exception('Error fetching quiz history: $e');
     }
   }

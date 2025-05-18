@@ -21,7 +21,6 @@ void main() async {
   final authRepository = AuthRepositoryImpl(authService);
   final quizRepository = QuizRepositoryImpl(QuizServices());
   final token = await authService.getToken();
-  print(token);
   runApp(
     MyApp(
       initialRoute: token != null ? '/' : '/login',

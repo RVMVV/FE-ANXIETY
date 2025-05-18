@@ -75,7 +75,6 @@ class AuthServices {
             _headers..addAll({'Authorization': 'Bearer ${await getToken()}'}),
         body: data.isNotEmpty ? jsonEncode(data) : null,
       );
-      print(response.body);
       return User.fromJson(jsonDecode(response.body)['data']['user']);
     } catch (e) {
       throw Exception(e);
