@@ -4,13 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:screening_app/views/fragment.dart';
 import 'package:intl/intl.dart';
 
+import '../models/quiz/quiz_history.dart';
 import '../utils/constant_finals.dart';
 import '../viewmodels/quiz/quiz_cubit.dart';
 import 'widgets/result_card.dart';
 
 class HasilPage extends StatefulWidget {
-  const HasilPage({super.key});
-
+  final QuizHistory history;
+  const HasilPage({super.key, required this.history});
   @override
   State<HasilPage> createState() => _HasilPageState();
 }
@@ -46,9 +47,16 @@ class _HasilPageState extends State<HasilPage> {
         builder: (context, state) {
           print(state);
           if (state is QuizLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: backgroundColor,
+              child: Center(
+                child: CircularProgressIndicator(color: primaryColor),
+              ),
+            );
           } else if (state is QuizHistorySuccess) {
-            final quizHistory = state.quizHistory;
+            final quizHistory = widget.history; //
             final formattedDate = DateFormat(
               'dd MMM yyyy, HH:mm',
             ).format(DateTime.parse(quizHistory.createdAt));
@@ -100,22 +108,32 @@ class _HasilPageState extends State<HasilPage> {
               ),
             );
           } else if (state is QuizHistoryError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: Styles.urbanistRegular.copyWith(
-                  color: textColor,
-                  fontSize: 16,
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: backgroundColor,
+              child: Center(
+                child: Text(
+                  state.message,
+                  style: Styles.urbanistRegular.copyWith(
+                    color: textColor,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             );
           }
-          return Center(
-            child: Text(
-              'Tidak ada data riwayat',
-              style: Styles.urbanistRegular.copyWith(
-                color: textColor,
-                fontSize: 16,
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: backgroundColor,
+            child: Center(
+              child: Text(
+                'Tidak ada data riwayat',
+                style: Styles.urbanistRegular.copyWith(
+                  color: textColor,
+                  fontSize: 16,
+                ),
               ),
             ),
           );

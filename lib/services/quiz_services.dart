@@ -47,7 +47,7 @@ class QuizServices {
     }
   }
 
-  Future<QuizHistory> getQuizHistory() async {
+  Future<List<QuizHistory>> getQuizHistory() async {
     try {
       final response = await http.get(
         Uri.parse('$apiUrl/$quizEndpoint/history'),
@@ -56,10 +56,9 @@ class QuizServices {
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
       final historyResponse = QuizHistoryResponse.fromJson(jsonData);
-      return historyResponse.data[0];
+      return historyResponse.data;
     } catch (e, s) {
-      print('Quiz Services - Get Quiz History: $e');
-      print('Quiz Services - Get Quiz History: $s');
+
       throw Exception('Error fetching quiz history: $e');
     }
   }

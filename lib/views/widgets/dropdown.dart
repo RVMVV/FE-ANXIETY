@@ -31,7 +31,13 @@ class Dropdown<T> extends StatelessWidget {
           isiData.map((T value) {
             return DropdownMenuItem<T>(
               value: value,
-              child: Text(value.toString()),
+              child: Text(
+                value.toString(),
+                style: Styles.urbanistMedium.copyWith(
+                  color: textColor,
+                  fontSize: 14,
+                ),
+              ),
             );
           }).toList(),
     );

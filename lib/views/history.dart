@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:screening_app/utils/constant_finals.dart';
 import 'package:screening_app/viewmodels/quiz/quiz_cubit.dart';
@@ -13,6 +14,7 @@ class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
@@ -26,46 +28,62 @@ class HistoryPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: BlocBuilder<QuizCubit, QuizState>(
             builder: (context, state) {
-              print(state);
               if (state is QuizLoading) {
-                return Center(
-                  child: CircularProgressIndicator(color: primaryColor),
+                return SizedBox(
+                  width: screenWidth,
+                  height: screenHeight,
+                  child: const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  ),
                 );
               } else if (state is QuizHistorySuccess) {
-                final history = state.quizHistory;
+                final histories = state.quizHistoryList; // <-- gunakan List
+                final sortedHistories = List.of(histories)..sort(
+                  (a, b) => DateTime.parse(
+                    b.createdAt,
+                  ).compareTo(DateTime.parse(a.createdAt)),
+                );
                 return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 16),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HasilPage(),
+                  children:
+                      sortedHistories.map((history) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 20, bottom: 10),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => HasilPage(history: history),
+                                ),
+                              );
+                            },
+                            child: HistoryCard(
+                              month:
+                                  DateFormat('MMM')
+                                      .format(DateTime.parse(history.createdAt))
+                                      .toUpperCase(),
+                              day: DateFormat(
+                                'dd',
+                              ).format(DateTime.parse(history.createdAt)),
                             ),
-                          );
-                        },
-                        child: HistoryCard(
-                          month:
-                              DateFormat('MMM')
-                                  .format(DateTime.parse(history.createdAt))
-                                  .toUpperCase(),
-                          day: DateFormat(
-                            'dd',
-                          ).format(DateTime.parse(history.createdAt)),
-                        ),
-                      ),
-                    ),
-                  ],
+                          ),
+                        );
+                      }).toList(),
                 );
               } else if (state is QuizHistoryError) {
-                return Center(
-                  child: Text(
-                    'Something Wrong',
-                    style: Styles.urbanistBold.copyWith(
-                      color: textColor,
-                      fontSize: 18,
+                return SizedBox(
+                  width: screenWidth,
+                  height: screenHeight,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      icCross,
+                      width: 250,
+                      height: 250,
+                      colorFilter: ColorFilter.mode(
+                        textColor.withAlpha(15),
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 );

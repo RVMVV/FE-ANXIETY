@@ -5,7 +5,7 @@ import '../services/quiz_services.dart';
 abstract class QuizRepositories {
   Future<QuizResponse> getQuiz();
   Future<void> sendQuizData(Map<String, List<dynamic>> data);
-  Future<QuizHistory> getQuizHistory();
+  Future<List<QuizHistory>> getQuizHistory();
 }
 
 class QuizRepositoryImpl implements QuizRepositories {
@@ -23,7 +23,7 @@ class QuizRepositoryImpl implements QuizRepositories {
   }
 
   @override
-  Future<QuizHistory> getQuizHistory() {
+  Future<List<QuizHistory>> getQuizHistory() {
     return quizService.getQuizHistory();
   }
 }

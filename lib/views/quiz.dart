@@ -18,7 +18,7 @@ class _QuizPageState extends State<QuizPage> {
   final PageController _pageController = PageController();
   int _currentPageIndex = 0;
   String _currentQuizType = 'HARS'; // Tipe kuis aktif
-  Map<String, List<double>> _sliderValues =
+  final Map<String, List<double>> _sliderValues =
       {}; // Simpan nilai slider per tipe kuis
 
   @override
@@ -74,16 +74,28 @@ class _QuizPageState extends State<QuizPage> {
     return BlocListener<QuizCubit, QuizState>(
       listener: (context, state) {
         if (state is SendQuizSuccess) {
+          // Setelah submit, ambil history terbaru
+          context.read<QuizCubit>().getQuizHistory();
+        }
+        if (state is QuizHistorySuccess) {
+          final latestHistory = state.quizHistoryList.first;
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HasilPage()),
+            MaterialPageRoute(builder: (context) =>  HasilPage(history: latestHistory,)),
           );
         }
       },
       child: BlocBuilder<QuizCubit, QuizState>(
         builder: (context, state) {
           if (state is QuizLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: backgroundColor,
+              child: Center(
+                child: CircularProgressIndicator(color: primaryColor),
+              ),
+            );
           } else if (state is QuizSuccess) {
             final quizData = state.quizResponse.data;
             // Ambil data untuk tipe kuis aktif
@@ -416,7 +428,20 @@ class _QuizPageState extends State<QuizPage> {
               ),
             );
           } else if (state is QuizError) {
-            return Center(child: Text(state.message));
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: backgroundColor,
+              child: Center(
+                child: Text(
+                  state.message,
+                  style: Styles.urbanistRegular.copyWith(
+                    color: textColor,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
           }
           return const Center(child: Text('No Data'));
         },

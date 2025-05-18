@@ -53,6 +53,7 @@ const String icArrowBack = '${icLoc}back_arrow_ic.svg';
 const String icForbidden = '${icLoc}forbidden_ic.svg';
 const String icDone = '${icLoc}done_ic.svg';
 const String icTripleUser = '${icLoc}user_triple_ic.svg';
+const String icCross = '${icLoc}cross_ic.svg';
 
 // emotion
 const String imgLoc = 'assets/img/';

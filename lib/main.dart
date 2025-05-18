@@ -74,7 +74,11 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide(color: warningColor, width: 1),
             ),
             hintStyle: Styles.urbanistMedium.copyWith(
-              fontSize: 12,
+              fontSize: 14,
+              color: textColor.withValues(alpha: 0.5),
+            ),
+            counterStyle: Styles.urbanistExtraBold.copyWith(
+              fontSize: 14,
               color: textColor.withValues(alpha: 0.5),
             ),
           ),

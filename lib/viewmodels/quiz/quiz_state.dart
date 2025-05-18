@@ -32,9 +32,9 @@ final class SendQuizError extends QuizState {
 }
 
 final class QuizHistorySuccess extends QuizState {
-  final QuizHistory quizHistory;
+  final List<QuizHistory> quizHistoryList; // Ubah jadi List
 
-  QuizHistorySuccess(this.quizHistory);
+  QuizHistorySuccess(this.quizHistoryList);
 }
 
 final class QuizHistoryError extends QuizState {
