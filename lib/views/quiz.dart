@@ -78,10 +78,17 @@ class _QuizPageState extends State<QuizPage> {
           context.read<QuizCubit>().getQuizHistory();
         }
         if (state is QuizHistorySuccess) {
-          final latestHistory = state.quizHistoryList.first;
+          final sortedHistories = List.of(state.quizHistoryList)..sort(
+            (a, b) => DateTime.parse(
+              b.createdAt,
+            ).compareTo(DateTime.parse(a.createdAt)),
+          );
+          final latestHistory = sortedHistories.first;
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) =>  HasilPage(history: latestHistory,)),
+            MaterialPageRoute(
+              builder: (context) => HasilPage(history: latestHistory),
+            ),
           );
         }
       },
@@ -171,9 +178,26 @@ class _QuizPageState extends State<QuizPage> {
                                 : 6;
                         String? sliderLabel;
 
-                        // Inisialisasi nilai slider untuk pertanyaan saat ini
-                        final currentSliderValue =
-                            _sliderValues[quizTypeId]![index];
+                        // Inisialisasi currentSliderValue
+                        final double currentSliderValue =
+                            isHars
+                                ? _sliderValues[quizTypeId]![index]
+                                : (_sliderValues[quizTypeId]![index] == 0
+                                    ? 0
+                                    : _sliderValues[quizTypeId]![index] - 1);
+
+                        // Untuk label, pastikan index >= 0
+                        final labelIndex = currentSliderValue.round().clamp(
+                          0,
+                          isDqol ? 4 : 6,
+                        );
+                        if (isDqol) {
+                          final labels =
+                              index < 7 ? sliderLabelsQDoL1 : sliderLabelsQDoL2;
+                          sliderLabel = labels[labelIndex];
+                        } else if (!isHars) {
+                          sliderLabel = sliderLabelsMSPSS[labelIndex];
+                        }
 
                         if (isHars) {
                           // Untuk HARS: Tampilkan title dan daftar questions
@@ -181,94 +205,104 @@ class _QuizPageState extends State<QuizPage> {
                           // Logging untuk debug
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 20),
-                                Text(
-                                  quiz.title ?? 'No Title',
-                                  style: Styles.urbanistBold.copyWith(
-                                    color: textColor,
-                                    fontSize: 26,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  'Gejala yang dirasakan :',
-                                  style: Styles.urbanistSemiBold.copyWith(
-                                    color: textColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                if (quiz.questions != null)
-                                  ...quiz.questions!.map((question) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 10,
-                                      ),
-                                      child: Text(
-                                        '- ${question.question}',
-                                        style: Styles.urbanistRegular.copyWith(
-                                          color: textColor,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    );
-                                  })
-                                else
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 20),
                                   Text(
-                                    'No Questions Available',
-                                    style: Styles.urbanistRegular.copyWith(
+                                    quiz.title ?? 'No Title',
+                                    style: Styles.urbanistBold.copyWith(
+                                      color: textColor,
+                                      fontSize: 26,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    'Gejala yang dirasakan :',
+                                    style: Styles.urbanistSemiBold.copyWith(
                                       color: textColor,
                                       fontSize: 16,
                                     ),
                                   ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  'Pilih Skor Skala:',
-                                  style: Styles.urbanistSemiBold.copyWith(
-                                    color: textColor,
-                                    fontSize: 21,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                // Slider untuk HARS
-                                SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    trackHeight: 8,
-                                    activeTrackColor: primaryColor,
-                                    inactiveTrackColor: primaryColor.withAlpha(
-                                      30,
-                                    ),
-                                    thumbColor: primaryColor,
-                                    overlayColor: primaryColor.withAlpha(50),
-                                    valueIndicatorColor: whiteColor,
-                                    valueIndicatorTextStyle: Styles
-                                        .urbanistSemiBold
-                                        .copyWith(
-                                          color: textColor,
-                                          fontSize: 20,
+                                  const SizedBox(height: 10),
+                                  if (quiz.questions != null)
+                                    ...quiz.questions!.map((question) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 10,
                                         ),
-                                    valueIndicatorShape:
-                                        RectangularSliderValueIndicatorShape(),
+                                        child: Text(
+                                          '- ${question.question}',
+                                          style: Styles.urbanistRegular
+                                              .copyWith(
+                                                color: textColor,
+                                                fontSize: 16,
+                                              ),
+                                        ),
+                                      );
+                                    })
+                                  else
+                                    Text(
+                                      'No Questions Available',
+                                      style: Styles.urbanistRegular.copyWith(
+                                        color: textColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    'Pilih Skor Skala:',
+                                    style: Styles.urbanistSemiBold.copyWith(
+                                      color: textColor,
+                                      fontSize: 21,
+                                    ),
                                   ),
-                                  child: Slider(
-                                    value: currentSliderValue,
-                                    min: sliderMin,
-                                    max: sliderMax,
-                                    divisions: sliderDivisions,
-                                    label:
-                                        currentSliderValue.round().toString(),
-                                    onChanged: (double value) {
-                                      setState(() {
-                                        _sliderValues[quizTypeId]![index] =
-                                            value;
-                                      });
-                                    },
+                                  const SizedBox(height: 20),
+                                  // Slider untuk HARS
+                                  SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      trackHeight: 8,
+                                      activeTrackColor: primaryColor,
+                                      inactiveTrackColor: primaryColor
+                                          .withAlpha(30),
+                                      thumbColor: primaryColor,
+                                      overlayColor: primaryColor.withAlpha(50),
+                                      valueIndicatorColor: whiteColor,
+                                      valueIndicatorTextStyle: Styles
+                                          .urbanistSemiBold
+                                          .copyWith(
+                                            color: textColor,
+                                            fontSize: 20,
+                                          ),
+                                      valueIndicatorShape:
+                                          RectangularSliderValueIndicatorShape(),
+                                    ),
+                                    child: Slider(
+                                      value: currentSliderValue,
+                                      min: sliderMin,
+                                      max: sliderMax,
+                                      divisions: sliderDivisions,
+                                      label:
+                                          currentSliderValue.round().toString(),
+                                      onChanged: (double value) {
+                                        setState(() {
+                                          _sliderValues[quizTypeId]![index] =
+                                              value;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'Dimana: \n 0 = Tidak ada gejala \n 1 = Ada 1 gejala muncul \n 2 = Ada setengah dari semua gejala muncul \n 3 = Ada lebih dari setengah gejala muncul \n 4 = Semua gejala muncul',
+                                    style: Styles.urbanistRegular.copyWith(
+                                      color: textColor,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         } else if (isDqol) {
@@ -340,7 +374,7 @@ class _QuizPageState extends State<QuizPage> {
                                     onChanged: (double value) {
                                       setState(() {
                                         _sliderValues[quizTypeId]![index] =
-                                            value;
+                                            value + 1;
                                       });
                                     },
                                   ),
@@ -443,7 +477,14 @@ class _QuizPageState extends State<QuizPage> {
               ),
             );
           }
-          return const Center(child: Text('No Data'));
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: backgroundColor,
+            child: Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            ),
+          );
         },
       ),
     );

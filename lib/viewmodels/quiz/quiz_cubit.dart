@@ -36,7 +36,7 @@ class QuizCubit extends Cubit<QuizState> {
     try {
       final quizHistory = await quizRepository.getQuizHistory();
       emit(QuizHistorySuccess(quizHistory));
-    } catch (e, s) {
+    } catch (e) {
       emit(QuizHistoryError('Gagal Memuat Riwayat Quiz: $e'));
     }
   }
