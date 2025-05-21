@@ -10,12 +10,14 @@ class ResultCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.emotion,
+    required this.status,
     required this.score,
     required this.material,
   });
   final String icon;
   final String title;
   final String emotion;
+  final String status;
   final double screenWidth;
   final String score;
   final String material;
@@ -68,7 +70,7 @@ class ResultCard extends StatelessWidget {
           Image.asset(emotion, width: 105, height: 105),
           const SizedBox(height: 15),
           Text(
-            'Tidak Ansietas',
+            status,
             style: Styles.urbanistBold.copyWith(
               color: primaryColor,
               fontSize: 18,

@@ -62,12 +62,16 @@ class QuizResult {
   final QuizType quizType;
   final String score;
   final String material;
+  final String status;
+  final String imagePath;
 
   QuizResult({
     required this.id,
     required this.quizType,
     required this.score,
     required this.material,
+    required this.status,
+    required this.imagePath
   });
 
   factory QuizResult.fromJson(Map<String, dynamic> json) {
@@ -76,6 +80,8 @@ class QuizResult {
       quizType: QuizType.fromJson(json['quiz_type'] as Map<String, dynamic>),
       score: json['score'] as String,
       material: json['material'] as String,
+      status: json['status'] as String,
+      imagePath: json['image_path'] as String
     );
   }
 
@@ -85,6 +91,8 @@ class QuizResult {
       'quiz_type': quizType.toJson(),
       'score': score,
       'material': material,
+      'status': status,
+      'image_path': imagePath
     };
   }
 }

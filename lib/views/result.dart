@@ -58,7 +58,7 @@ class _HasilPageState extends State<HasilPage> {
             final quizHistory = widget.history; //
             final formattedDate = DateFormat(
               'dd MMM yyyy, HH:mm',
-            ).format(DateTime.parse(quizHistory.createdAt));
+            ).format( DateTime.parse(quizHistory.createdAt).toUtc().add(const Duration(hours: 7)));
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -95,13 +95,13 @@ class _HasilPageState extends State<HasilPage> {
                           screenWidth: screenWidth,
                           icon: icon,
                           title: title,
-                          emotion:
-                              imgBahagia, // Placeholder, klasifikasi di akhir
+                          status: result.status,
+                          emotion: '$imgLoc${result.imagePath}',
                           score: result.score,
                           material: result.material,
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),

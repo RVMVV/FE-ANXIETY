@@ -78,12 +78,7 @@ class _QuizPageState extends State<QuizPage> {
           context.read<QuizCubit>().getQuizHistory();
         }
         if (state is QuizHistorySuccess) {
-          final sortedHistories = List.of(state.quizHistoryList)..sort(
-            (a, b) => DateTime.parse(
-              b.createdAt,
-            ).compareTo(DateTime.parse(a.createdAt)),
-          );
-          final latestHistory = sortedHistories.first;
+          final latestHistory = state.quizHistoryList.first;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
