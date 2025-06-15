@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:screening_app/utils/constant_finals.dart';
@@ -16,11 +17,16 @@ import 'views/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   await dotenv.load(fileName: ".env");
   final authService = AuthServices();
   final authRepository = AuthRepositoryImpl(authService);
   final quizRepository = QuizRepositoryImpl(QuizServices());
   final token = await authService.getToken();
+  
   runApp(
     MyApp(
       initialRoute: token != null ? '/' : '/login',

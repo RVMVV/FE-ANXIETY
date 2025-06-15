@@ -312,7 +312,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   },
                   isiData: _jobs,
                 ),
-
+        
                 const SizedBox(height: 25),
                 Text(
                   'Status Pernikahan',
@@ -332,7 +332,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   },
                   isiData: _marital,
                 ),
-
+        
                 const SizedBox(height: 25),
                 Text(
                   'Lama Menderita DM',
@@ -372,13 +372,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   isiData: _familyHistory,
                 ),
                 const SizedBox(height: 50),
-
+        
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       _updateProfile();
                     },
-
+        
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor, // Warna tombol
                       padding: const EdgeInsets.symmetric(

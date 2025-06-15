@@ -23,6 +23,8 @@ class _HasilPageState extends State<HasilPage> {
     context.read<QuizCubit>().getQuizHistory();
   }
 
+
+  
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;

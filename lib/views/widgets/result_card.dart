@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:screening_app/views/widgets/youtube_player.dart';
 
 import '../../utils/constant_finals.dart';
 
@@ -85,7 +86,7 @@ class ResultCard extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Video Edukasi',
+              'Materi Edukasi',
               style: Styles.urbanistBold.copyWith(
                 color: textColor,
                 fontSize: 16,
@@ -95,50 +96,11 @@ class ResultCard extends StatelessWidget {
           const SizedBox(height: 10),
           Container(
             width: screenWidth,
-            height: 160,
-            decoration: BoxDecoration(
-              color: whiteColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: textColor.withAlpha(30),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                'Placeholder Video Edukasi',
-                style: Styles.urbanistMedium.copyWith(
-                  color: textColor,
-                  fontSize: 26,
-                ),
-              ),
+            child: YoutubeVideoPlayer(
+              youtubeUrl: 'https://www.youtube.com/shorts/Z0NNraPNpoc',
             ),
           ),
           const SizedBox(height: 20),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Materi Edukasi',
-              style: Styles.urbanistBold.copyWith(
-                color: textColor,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-              textAlign: TextAlign.justify,
-              style: Styles.urbanistRegular.copyWith(
-                color: textColor,
-                fontSize: 12,
-              ),
-            ),
-          ),
         ],
       ),
     );
