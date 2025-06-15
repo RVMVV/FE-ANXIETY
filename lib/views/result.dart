@@ -23,8 +23,6 @@ class _HasilPageState extends State<HasilPage> {
     context.read<QuizCubit>().getQuizHistory();
   }
 
-
-  
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -58,9 +56,11 @@ class _HasilPageState extends State<HasilPage> {
             );
           } else if (state is QuizHistorySuccess) {
             final quizHistory = widget.history; //
-            final formattedDate = DateFormat(
-              'dd MMM yyyy, HH:mm',
-            ).format( DateTime.parse(quizHistory.createdAt).toUtc().add(const Duration(hours: 7)));
+            final formattedDate = DateFormat('dd MMM yyyy, HH:mm').format(
+              DateTime.parse(
+                quizHistory.createdAt,
+              ).toUtc().add(const Duration(hours: 7)),
+            );
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -80,15 +80,29 @@ class _HasilPageState extends State<HasilPage> {
                     ...quizHistory.results.map((result) {
                       String title;
                       String icon;
+                      List<String> youtubeUrls = [];
+                      String? materiText;
+
                       if (result.quizType.type.contains('HARS')) {
                         title = 'HARS';
                         icon = icMeditation;
+                        youtubeUrls = [
+                          'https://youtube.com/shorts/IRfl0_6x4sI?feature=share',
+                          'https://youtube.com/shorts/_zeM0PTo_Pw?feature=share',
+                          'https://youtube.com/shorts/zbM22_Ip1Kg?feature=share',
+                          'https://youtu.be/0ihNo4FJinU',
+                          'https://youtube.com/shorts/fxcTVg1E_wI?feature=share',
+                        ];
                       } else if (result.quizType.type.contains('MSPSS')) {
                         title = 'MSPSS';
                         icon = icTripleUser;
+                        materiText = materiMSPSS;
                       } else {
                         title = 'DQoL';
                         icon = icDone;
+                        youtubeUrls = [
+                          'https://youtube.com/shorts/Z0NNraPNpoc?feature=share',
+                        ];
                       }
 
                       return Padding(
@@ -100,7 +114,8 @@ class _HasilPageState extends State<HasilPage> {
                           status: result.status,
                           emotion: '$imgLoc${result.imagePath}',
                           score: result.score,
-                          material: result.material,
+                          youtubeUrls: youtubeUrls,
+                          materiText: materiText,
                         ),
                       );
                     }),

@@ -13,7 +13,8 @@ class ResultCard extends StatelessWidget {
     required this.emotion,
     required this.status,
     required this.score,
-    required this.material,
+    this.youtubeUrls = const [],
+    this.materiText,
   });
   final String icon;
   final String title;
@@ -21,7 +22,8 @@ class ResultCard extends StatelessWidget {
   final String status;
   final double screenWidth;
   final String score;
-  final String material;
+  final List<String> youtubeUrls;
+  final String? materiText;
 
   @override
   Widget build(BuildContext context) {
@@ -94,12 +96,24 @@ class ResultCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Container(
-            width: screenWidth,
-            child: YoutubeVideoPlayer(
-              youtubeUrl: 'https://www.youtube.com/shorts/Z0NNraPNpoc',
+          if (youtubeUrls.isNotEmpty)
+            ...youtubeUrls.map(
+              (url) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: YoutubeVideoPlayer(youtubeUrl: url),
+              ),
             ),
-          ),
+          if (materiText != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                materiText!,
+                style: Styles.urbanistRegular.copyWith(
+                  color: textColor,
+                  fontSize: 16,
+                ),
+              ),
+            ),
           const SizedBox(height: 20),
         ],
       ),
