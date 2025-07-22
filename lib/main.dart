@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => QuizCubit(quizRepository)),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: backgroundColor),
           textSelectionTheme: const TextSelectionThemeData(

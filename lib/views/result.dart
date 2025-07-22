@@ -43,28 +43,27 @@ class _HasilPageState extends State<HasilPage> {
           icon: SvgPicture.asset(icArrowBack),
         ),
       ),
-      body: BlocBuilder<QuizCubit, QuizState>(
-        builder: (context, state) {
-          if (state is QuizLoading) {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: backgroundColor,
-              child: Center(
-                child: CircularProgressIndicator(color: primaryColor),
-              ),
-            );
-          } else if (state is QuizHistorySuccess) {
-            final quizHistory = widget.history; //
-            final formattedDate = DateFormat('dd MMM yyyy, HH:mm').format(
-              DateTime.parse(
-                quizHistory.createdAt,
-              ).toUtc().add(const Duration(hours: 7)),
-            );
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: BlocBuilder<QuizCubit, QuizState>(
+          builder: (context, state) {
+            if (state is QuizLoading) {
+              return Container(
+                width: double.infinity,
+                color: backgroundColor,
+                child: Center(
+                  child: CircularProgressIndicator(color: primaryColor),
+                ),
+              );
+            } else if (state is QuizHistorySuccess) {
+              final quizHistory = widget.history; //
+              final formattedDate = DateFormat('dd MMM yyyy, HH:mm').format(
+                DateTime.parse(
+                  quizHistory.createdAt,
+                ).toUtc().add(const Duration(hours: 7)),
+              );
+        
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -82,7 +81,7 @@ class _HasilPageState extends State<HasilPage> {
                       String icon;
                       List<String> youtubeUrls = [];
                       String? materiText;
-
+                
                       if (result.quizType.type.contains('HARS')) {
                         title = 'HARS';
                         icon = icMeditation;
@@ -104,7 +103,7 @@ class _HasilPageState extends State<HasilPage> {
                           'https://youtube.com/shorts/Z0NNraPNpoc?feature=share',
                         ];
                       }
-
+                
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: ResultCard(
@@ -121,16 +120,30 @@ class _HasilPageState extends State<HasilPage> {
                     }),
                   ],
                 ),
-              ),
-            );
-          } else if (state is QuizHistoryError) {
+              );
+            } else if (state is QuizHistoryError) {
+              return Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: backgroundColor,
+                child: Center(
+                  child: Text(
+                    state.message,
+                    style: Styles.urbanistRegular.copyWith(
+                      color: textColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              );
+            }
             return Container(
               width: double.infinity,
               height: double.infinity,
               color: backgroundColor,
               child: Center(
                 child: Text(
-                  state.message,
+                  'Tidak ada data riwayat',
                   style: Styles.urbanistRegular.copyWith(
                     color: textColor,
                     fontSize: 16,
@@ -138,22 +151,8 @@ class _HasilPageState extends State<HasilPage> {
                 ),
               ),
             );
-          }
-          return Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: backgroundColor,
-            child: Center(
-              child: Text(
-                'Tidak ada data riwayat',
-                style: Styles.urbanistRegular.copyWith(
-                  color: textColor,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          );
-        },
+          },
+        ),
       ),
     );
   }

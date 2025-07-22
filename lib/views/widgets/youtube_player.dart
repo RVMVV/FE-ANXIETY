@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YoutubeVideoPlayer extends StatefulWidget {
@@ -12,54 +11,55 @@ class YoutubeVideoPlayer extends StatefulWidget {
 
 class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
   late YoutubePlayerController _controller;
+  late String _currentVideoId;
 
   @override
   void initState() {
     super.initState();
-    final videoId = YoutubePlayer.convertUrlToId(widget.youtubeUrl);
+    _currentVideoId = YoutubePlayer.convertUrlToId(widget.youtubeUrl) ?? '';
     _controller = YoutubePlayerController(
-      initialVideoId: videoId ?? '',
+      initialVideoId: _currentVideoId,
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
         enableCaption: false,
         controlsVisibleAtStart: true,
+        forceHD: false,
       ),
-    )..addListener(_onPlayerChanged);
+    );
   }
 
-  void _onPlayerChanged() {
-    if (_controller.value.isFullScreen) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+  @override
+  void didUpdateWidget(covariant YoutubeVideoPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final newVideoId = YoutubePlayer.convertUrlToId(widget.youtubeUrl) ?? '';
+    if (newVideoId != _currentVideoId) {
+      _currentVideoId = newVideoId;
+      _controller.load(_currentVideoId);
     }
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onPlayerChanged);
     _controller.dispose();
-    // Pastikan kembali ke portrait saat widget dispose
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayer(
-      controller: _controller,
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.red,
+    return AspectRatio(
+      aspectRatio: 9 / 16,
+      child: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        // Custom controls tanpa tombol fullscreen
+        bottomActions: [
+          CurrentPosition(),
+          ProgressBar(isExpanded: true),
+          RemainingDuration(),
+        ],
+      ),
     );
   }
 }

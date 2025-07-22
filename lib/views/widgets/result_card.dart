@@ -4,7 +4,7 @@ import 'package:screening_app/views/widgets/youtube_player.dart';
 
 import '../../utils/constant_finals.dart';
 
-class ResultCard extends StatelessWidget {
+class ResultCard extends StatefulWidget {
   const ResultCard({
     super.key,
     required this.screenWidth,
@@ -26,10 +26,17 @@ class ResultCard extends StatelessWidget {
   final String? materiText;
 
   @override
+  State<ResultCard> createState() => _ResultCardState();
+}
+
+class _ResultCardState extends State<ResultCard> {
+  int _currentVideoIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(15),
-      width: screenWidth,
+      width: widget.screenWidth,
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(21),
@@ -54,12 +61,12 @@ class ResultCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(13),
                 ),
                 child: Center(
-                  child: SvgPicture.asset(icon, width: 30, height: 30),
+                  child: SvgPicture.asset(widget.icon, width: 30, height: 30),
                 ),
               ),
               SizedBox(width: 15),
               Text(
-                title,
+                widget.title,
                 style: Styles.urbanistBold.copyWith(
                   color: textColor,
                   fontSize: 26,
@@ -70,10 +77,10 @@ class ResultCard extends StatelessWidget {
 
           //emotion
           const SizedBox(height: 30),
-          Image.asset(emotion, width: 105, height: 105),
+          Image.asset(widget.emotion, width: 105, height: 105),
           const SizedBox(height: 15),
           Text(
-            status,
+            widget.status,
             style: Styles.urbanistBold.copyWith(
               color: primaryColor,
               fontSize: 18,
@@ -81,7 +88,7 @@ class ResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            'Skor $title $score',
+            'Skor ${widget.title} ${widget.score}',
             style: Styles.urbanistBold.copyWith(color: textColor, fontSize: 18),
           ),
           const SizedBox(height: 50),
@@ -96,18 +103,43 @@ class ResultCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          if (youtubeUrls.isNotEmpty)
-            ...youtubeUrls.map(
-              (url) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: YoutubeVideoPlayer(youtubeUrl: url),
-              ),
+          if (widget.youtubeUrls.isNotEmpty)
+            Column(
+              children: [
+                YoutubeVideoPlayer(
+                  key: ValueKey(widget.youtubeUrls[_currentVideoIndex]),
+                  youtubeUrl: widget.youtubeUrls[_currentVideoIndex],
+                ),
+                if (widget.youtubeUrls.length > 1)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed:
+                            _currentVideoIndex > 0
+                                ? () => setState(() => _currentVideoIndex--)
+                                : null,
+                      ),
+                      Text(
+                        '${_currentVideoIndex + 1} / ${widget.youtubeUrls.length}',
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward),
+                        onPressed:
+                            _currentVideoIndex < widget.youtubeUrls.length - 1
+                                ? () => setState(() => _currentVideoIndex++)
+                                : null,
+                      ),
+                    ],
+                  ),
+              ],
             ),
-          if (materiText != null)
+          if (widget.materiText != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                materiText!,
+                widget.materiText!,
                 style: Styles.urbanistRegular.copyWith(
                   color: textColor,
                   fontSize: 16,
