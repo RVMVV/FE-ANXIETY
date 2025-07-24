@@ -135,14 +135,28 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 SizedBox(width: 10),
                                 InkWell(
-                                  onTap: () {
-                                    Navigator.push(
+                                    onTap: () {
+                                    if (isProfileIncomplete) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                        'Lengkapi profil terlebih dahulu sebelum melakukan screening.',
+                                        style: Styles.urbanistMedium.copyWith(
+                                          color: whiteColor,
+                                        ),
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                      );
+                                    } else {
+                                      Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => QuizPage(),
                                       ),
-                                    );
-                                  },
+                                      );
+                                    }
+                                    },
                                   child: Container(
                                     width: 40,
                                     height: 40,

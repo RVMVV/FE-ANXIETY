@@ -26,7 +26,7 @@ class QuizCubit extends Cubit<QuizState> {
     try {
       await quizRepository.sendQuizData(data);
       emit(SendQuizSuccess(data));
-    } catch (e, s) {
+    } catch (e) {
       emit(SendQuizError('Gagal Mengirim Quiz : $e'));
     }
   }
